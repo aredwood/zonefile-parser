@@ -20,7 +20,16 @@ class Record:
         self.ttl = ttl
 
     def __str__(self):
-        return "{0}:{1} -> {2}".format(self.rtype,self.name,self.rdata)
+        return str(self.__repr__())
+
+    def __repr__(self):
+        return {
+            "rtype":self.rtype,
+            "name":self.name,
+            "rclass":self.rclass,
+            "rdata":self.rdata ,
+            "ttl":self.ttl
+        }
 
     def validate(self):
         # TODO make this work
