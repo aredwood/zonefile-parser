@@ -23,6 +23,9 @@ def clean(text:str):
 
     return "\n".join(clean_lines)
 
+# TODO unit test
+# TODO break apart
+# TODO error handling
 def parse(text:str):
 
     text = clean(text)
