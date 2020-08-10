@@ -1,1 +1,1 @@
-import zone_file_parser.helper
+from zone_file_parser.main import parse
