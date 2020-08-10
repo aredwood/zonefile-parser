@@ -8,6 +8,7 @@ from zone_file_parser.helper import find_soa_lines
 from zone_file_parser.helper import parted_soa
 from zone_file_parser.parser import parse_record
 import shlex
+import shlex
 
 def clean(text:str):
     lines = text.splitlines()
