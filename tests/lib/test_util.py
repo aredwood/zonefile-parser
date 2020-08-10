@@ -1,9 +1,9 @@
 import unittest
 
 
-from zone_file_parser.helper import remove_comments
+from zonefile_parser.helper import remove_comments
 
-from zone_file_parser.helper import default_ttl
+from zonefile_parser.helper import default_ttl
 
 class Util(unittest.TestCase):
     def test_remove_comments(self):

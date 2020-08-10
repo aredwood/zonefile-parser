@@ -1,4 +1,4 @@
-from zone_file_parser.record import Record
+from zonefile_parser.record import Record
 def remove_comments(line:str):
 
     for index,character in enumerate(line):

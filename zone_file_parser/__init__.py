@@ -1,1 +1,0 @@
-from zone_file_parser.main import parse

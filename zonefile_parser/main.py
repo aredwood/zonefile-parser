@@ -1,12 +1,11 @@
 import os
-import zone_file_parser
-from zone_file_parser.helper import remove_comments
-from zone_file_parser.helper import remove_trailing_spaces
-from zone_file_parser.helper import default_ttl
-from zone_file_parser.helper import default_origin
-from zone_file_parser.helper import find_soa_lines
-from zone_file_parser.helper import parted_soa
-from zone_file_parser.parser import parse_record
+from zonefile_parser.helper import remove_comments
+from zonefile_parser.helper import remove_trailing_spaces
+from zonefile_parser.helper import default_ttl
+from zonefile_parser.helper import default_origin
+from zonefile_parser.helper import find_soa_lines
+from zonefile_parser.helper import parted_soa
+from zonefile_parser.parser import parse_record
 import shlex
 import shlex
 

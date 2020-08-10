@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 version = "0.1.0"
 
 setup(
-    name='zone-file-parser',
+    name='zonefile_parser',
     version=version,
     url='https://github.com/aredwood/zone-file-parser',
     license='MIT',
