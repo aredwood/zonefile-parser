@@ -6,9 +6,9 @@ from zone_file_parser.helper import default_ttl
 from zone_file_parser.helper import default_origin
 from zone_file_parser.helper import find_soa_lines
 from zone_file_parser.helper import parted_soa
-from zone_file_parser.record import Record
 from zone_file_parser.parser import parse_record
 import shlex
+
 def clean(text:str):
     lines = text.splitlines()
 
@@ -102,8 +102,4 @@ def parse(text:str):
         )
     )
 
-    for record in normalized_records:
-        print(record)
-
-
-
+    return normalized_records
