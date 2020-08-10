@@ -1,0 +1,119 @@
+import os
+import zone_file_parser
+from zone_file_parser.helper import remove_comments
+from zone_file_parser.helper import remove_trailing_spaces
+from zone_file_parser.helper import default_ttl
+from zone_file_parser.helper import default_origin
+from zone_file_parser.helper import find_soa_lines
+from zone_file_parser.helper import parted_soa
+from zone_file_parser.record import Record
+from zone_file_parser.parser import parse_record
+import shlex
+def clean(text:str):
+    lines = text.splitlines()
+
+    clean_lines = []
+    for line in lines:
+        line = remove_comments(line)
+        line = remove_trailing_spaces(line)
+
+        if len(line) == 0:
+            continue
+        clean_lines.append(line)
+
+    return "\n".join(clean_lines)
+
+def parse(text:str):
+
+    text = clean(text)
+    lines = text.splitlines()
+
+    ttl = default_ttl(text)
+
+    origin = default_origin(text)
+
+    # find the SOA, process it, and add it back as a single line
+    soa_lines = find_soa_lines(text)
+
+    raw_soa = "\n".join([lines[index] for index in soa_lines])
+
+    soa_parts = parted_soa(raw_soa)
+
+    for index in reversed(soa_lines):
+        lines.pop(index)
+
+    lines.insert(soa_lines[0]," ".join(soa_parts))
+
+    # remove all the $TTL & $ORIGIN lines, we have the values,
+    # they are no longer needed.
+    record_lines = list(
+        filter(
+            lambda x : "$TTL" not in x and "$ORIGIN" not in x,
+            lines
+        )
+    )
+
+    # each line now represents a single record
+    # we need to fill in the name of each record
+
+    # go through the zone file and add a name to every record
+    normalized_records = []
+    last_name = None
+    for record_line in record_lines:
+        if record_line[0] == "@" and origin is not None:
+            record_line = record_line.replace("@",origin)
+            last_name = origin
+
+        if record_line[0] == " ":
+            record_line = last_name + record_line
+        else:
+            name = record_line[:record_line.index(" ")]
+            last_name = name
+
+
+        normalized_records.append(record_line)
+
+
+    normalized_records = list(
+        map(
+            lambda x : shlex.split(x),
+            normalized_records
+        )
+    )
+    # add a TTL to records where one doesn't exist
+    def add_ttl(record:list):
+        if record[1] == "IN":
+            record.insert(1,ttl)
+
+        return record
+
+    normalized_records = list(
+        map(
+            lambda x : add_ttl(x),
+            normalized_records
+        )
+    )
+
+
+    normalized_records = list(
+        map(
+            lambda x : parse_record(x),
+            normalized_records
+        )
+    )
+
+    for record in normalized_records:
+        print(record)
+
+
+
+
+
+
+
+
+
+
+
+
+
