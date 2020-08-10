@@ -7,12 +7,15 @@ DNS Zone File
 
 from setuptools import setup, find_packages
 
+version = "0.1.0"
+
 setup(
     name='zone-file-parser',
-    version='0.1.0',
+    version=version,
     url='https://github.com/aredwood/zone-file-parser',
     license='MIT',
     author='Alex Redwood',
+    download_url=f"https://github.com/aredwood/zone-file-parser/archive/{version}.tar.gz",
     author_email='hello@alexredwood.com',
     maintainer='Alex Redwood',
     maintainer_email='hello@alexredwood.com',
