@@ -1,4 +1,4 @@
-from zonefile_parser.record import Record
+
 def remove_comments(line:str):
 
     for index,character in enumerate(line):
@@ -6,7 +6,6 @@ def remove_comments(line:str):
             line = line[:index]
             break
     return line
-
 
 def is_in_quote(text:str,index:int):
     return text[:index].count("\"") % 2 == 1
@@ -79,4 +78,3 @@ def parted_soa(text:str):
     )
 
     return parts
-
