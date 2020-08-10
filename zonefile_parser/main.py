@@ -1,14 +1,14 @@
 import os
-import zone_file_parser
-from zone_file_parser.helper import remove_comments
-from zone_file_parser.helper import remove_trailing_spaces
-from zone_file_parser.helper import default_ttl
-from zone_file_parser.helper import default_origin
-from zone_file_parser.helper import find_soa_lines
-from zone_file_parser.helper import parted_soa
-from zone_file_parser.record import Record
-from zone_file_parser.parser import parse_record
+from zonefile_parser.helper import remove_comments
+from zonefile_parser.helper import remove_trailing_spaces
+from zonefile_parser.helper import default_ttl
+from zonefile_parser.helper import default_origin
+from zonefile_parser.helper import find_soa_lines
+from zonefile_parser.helper import parted_soa
+from zonefile_parser.parser import parse_record
 import shlex
+import shlex
+
 def clean(text:str):
     lines = text.splitlines()
 
@@ -60,6 +60,10 @@ def parse(text:str):
     normalized_records = []
     last_name = None
     for record_line in record_lines:
+
+        # replace all tabs with spaces
+        record_line = record_line.replace("\t"," ")
+
         if record_line[0] == "@" and origin is not None:
             record_line = record_line.replace("@",origin)
             last_name = origin
@@ -102,18 +106,4 @@ def parse(text:str):
         )
     )
 
-    for record in normalized_records:
-        print(record)
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return normalized_records

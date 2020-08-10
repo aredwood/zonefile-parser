@@ -1,4 +1,4 @@
-from zone_file_parser.record import Record
+from zonefile_parser.record import Record
 from enum import IntEnum
 
 class RecordEnum(IntEnum):
