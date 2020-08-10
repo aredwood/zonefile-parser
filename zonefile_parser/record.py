@@ -1,3 +1,6 @@
+# TODO document
+# TODO unit test
+# TODO implement validation
 class Record:
 
     def __init__(self):

@@ -16,7 +16,7 @@ class RecordEnum(IntEnum):
     SOA_RETRY = 8
     SOA_EXPIRE = 9
     SOA_MINIMUM = 10
-
+# TODO unit test
 def parse_record(parts:list) -> Record:
     record = Record()
 

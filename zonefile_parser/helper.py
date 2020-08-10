@@ -1,21 +1,24 @@
 
+# TODO unit test
 def remove_comments(line:str):
-
     for index,character in enumerate(line):
         if character == ";" and not is_in_quote(line,index):
             line = line[:index]
             break
     return line
 
+# TODO unit test
 def is_in_quote(text:str,index:int):
     return text[:index].count("\"") % 2 == 1
 
+# TODO unit test
 def remove_trailing_spaces(line:str):
     return line
 
 def collapse_brackets(text:str):
     return text
 
+# TODO unit test
 def default_ttl(text:str):
     lines = text.splitlines()
     for line in lines:
@@ -33,6 +36,8 @@ def default_origin(text:str):
             return origin
     return None
 
+# TODO unit test
+# TODO refactor
 def find_soa_lines(text:str):
 
     lines = text.splitlines()
@@ -61,6 +66,7 @@ def find_soa_lines(text:str):
 
     return range(soa_start_line,soa_end_line + 1)
 
+# TODO unit test
 def parted_soa(text:str):
 
     # flatten
