@@ -36,8 +36,6 @@ def parse_bind(bind:str):
     return ttl_seconds
 
 
-
-
 # TODO unit test
 def default_ttl(text:str):
     lines = text.splitlines()
@@ -47,12 +45,11 @@ def default_ttl(text:str):
             try:
                 ttl = int(ttl_str)
                 return int(ttl)
-            except:
+            except ValueError:
                 # the value could be BIND format, attempt to parse
                 # https://www.zytrax.com/books//dns/apa/time.html
                 ttl = parse_bind(ttl_str)
                 return ttl
-
 
     return None
 
