@@ -22,6 +22,14 @@ $ORIGIN emailtesting.site.
         result = default_ttl(text)
         self.assertEqual(result,300)
 
+    def test_gets_ttl_bind(self):
+        text = """
+$TTL 10d
+$ORIGIN emailtesting.site.
+        """
+
+        result = default_ttl(text)
+        self.assertEqual(result,864000)
 
 if __name__ == '__main__':
     unittest.main()

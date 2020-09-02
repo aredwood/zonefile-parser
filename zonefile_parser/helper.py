@@ -18,13 +18,42 @@ def remove_trailing_spaces(line:str):
 def collapse_brackets(text:str):
     return text
 
+def parse_bind(bind:str):
+    periods = {
+        "s": 1,
+        "m": 60,
+        "h": 3600,
+        "d": 86400,
+        "w": 604800
+    }
+
+    period = bind[-1]
+
+    amount = int(bind.replace(period,""))
+
+    ttl_seconds = amount * periods[period]
+
+    return ttl_seconds
+
+
+
+
 # TODO unit test
 def default_ttl(text:str):
     lines = text.splitlines()
     for line in lines:
         if "$TTL" in line:
-            ttl = line.split(" ")[1]
-            return int(ttl)
+            ttl_str = line.split(" ")[1]
+            try:
+                ttl = int(ttl_str)
+                return int(ttl)
+            except:
+                # the value could be BIND format, attempt to parse
+                # https://www.zytrax.com/books//dns/apa/time.html
+                ttl = parse_bind(ttl_str)
+                return ttl
+
+
     return None
 
 # TODO write test case
