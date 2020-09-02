@@ -35,7 +35,6 @@ def parse_bind(bind:str):
 
     return ttl_seconds
 
-
 # TODO unit test
 def default_ttl(text:str):
     lines = text.splitlines()
