@@ -16,7 +16,7 @@ class test_default_ttl(unittest.TestCase):
     def test_gets_ttl(self):
         text = """
 $TTL 300
-$ORIGIN emailtesting.site.
+$ORIGIN example.site.
         """
 
         result = default_ttl(text)
@@ -25,7 +25,7 @@ $ORIGIN emailtesting.site.
     def test_gets_ttl_bind(self):
         text = """
 $TTL 10d
-$ORIGIN emailtesting.site.
+$ORIGIN example.site.
         """
 
         result = default_ttl(text)
