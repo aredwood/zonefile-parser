@@ -1,5 +1,6 @@
 # zone-file-parser
 
+! this package is not currently RFC compliant, but if you open up an issue on github - i'm more than likely to attempt to solve it.
 
 ## install
 ```bash
