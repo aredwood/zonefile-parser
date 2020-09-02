@@ -16,12 +16,20 @@ class test_default_ttl(unittest.TestCase):
     def test_gets_ttl(self):
         text = """
 $TTL 300
-$ORIGIN emailtesting.site.
+$ORIGIN example.site.
         """
 
         result = default_ttl(text)
         self.assertEqual(result,300)
 
+    def test_gets_ttl_bind(self):
+        text = """
+$TTL 10d
+$ORIGIN example.site.
+        """
+
+        result = default_ttl(text)
+        self.assertEqual(result,864000)
 
 if __name__ == '__main__':
     unittest.main()
