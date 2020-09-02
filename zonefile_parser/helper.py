@@ -25,7 +25,7 @@ def default_ttl(text:str):
         if "$TTL" in line:
             ttl = line.split(" ")[1]
             return int(ttl)
-        return None
+    return None
 
 # TODO write test case
 def default_origin(text:str):
