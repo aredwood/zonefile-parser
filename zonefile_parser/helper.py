@@ -31,7 +31,7 @@ def parse_bind(bind:str):
 
     amount = int(bind.replace(period,""))
 
-    ttl_seconds = amount * periods[period]
+    ttl_seconds = amount * periods[period.lower()]
 
     return ttl_seconds
 
