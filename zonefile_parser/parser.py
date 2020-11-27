@@ -22,21 +22,21 @@ def parse_record(parts:list) -> Record:
 
     record.set_name(parts[RecordEnum.NAME])
     record.set_ttl(parts[RecordEnum.TTL])
-    record.set_rclass(parts[RecordEnum.RCLASS])
-    record.set_rtype(parts[RecordEnum.RTYPE])
+    record.set_rclass(parts[RecordEnum.RCLASS].upper())
+    record.set_rtype(parts[RecordEnum.RTYPE].upper())
 
     # rdata is unique for MX and SOA, everything else is the same.
-    if parts[RecordEnum.RTYPE] not in ["MX","SOA"]:
+    if record.rtype not in ["MX","SOA"]:
         record.set_rdata({
             "value":parts[RecordEnum.RDATA]
         })
-    elif parts[RecordEnum.RTYPE] == "MX":
+    elif record.rtype == "MX":
         # the record is a SOA or MX
         record.set_rdata({
             "priority": parts[RecordEnum.MX_PRIORITY],
             "host":parts[RecordEnum.MX_HOST]
         })
-    elif parts[RecordEnum.RTYPE] == "SOA":
+    elif record.rtype == "SOA":
         record.set_rdata({
                 "mname": parts[RecordEnum.SOA_MNAME],
                 "rname": parts[RecordEnum.SOA_RNAME],
