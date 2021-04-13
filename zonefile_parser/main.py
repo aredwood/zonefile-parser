@@ -6,8 +6,9 @@ from zonefile_parser.helper import default_origin
 from zonefile_parser.helper import find_soa_lines
 from zonefile_parser.helper import parted_soa
 from zonefile_parser.parser import parse_record
+
 import shlex
-import shlex
+
 
 def clean(text:str):
     lines = text.splitlines()
@@ -41,6 +42,8 @@ def parse(text:str):
     raw_soa = "\n".join([lines[index] for index in soa_lines])
 
     soa_parts = parted_soa(raw_soa)
+
+    default_rclass = "IN"
 
     for index in reversed(soa_lines):
         lines.pop(index)
@@ -77,9 +80,7 @@ def parse(text:str):
             name = record_line[:record_line.index(" ")]
             last_name = name
 
-
         normalized_records.append(record_line)
-
 
     normalized_records = list(
         map(
@@ -87,12 +88,25 @@ def parse(text:str):
             normalized_records
         )
     )
+
     # add a TTL to records where one doesn't exist
     def add_ttl(record:list):
         if record[1] == "IN":
             record.insert(1,ttl)
 
         return record
+
+    # add an rclass (defaults to IN) when one isn't present
+    def add_rclass(record:list):
+        # there are at least 5 required fields for each record
+        if len(record) < 5 and record[1].isdigit():
+            record.insert(2,default_rclass)
+
+        if len(record) < 5 and record[2].isdigit():
+            record.insert(1,default_rclass)
+
+        return record
+
 
     normalized_records = list(
         map(
@@ -101,6 +115,12 @@ def parse(text:str):
         )
     )
 
+    normalized_records = list(
+        map(
+            lambda x : add_rclass(x),
+            normalized_records
+        )
+    )
 
     normalized_records = list(
         map(
