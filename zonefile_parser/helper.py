@@ -75,7 +75,7 @@ def find_soa_lines(text:str):
 
     for line_number in range(0,len(lines)-1):
         line = lines[line_number]
-        if "SOA" in line:
+        if "SOA" in line.upper():
             soa_start_line = line_number
             if "(" in line:
                 find_bracket = True
