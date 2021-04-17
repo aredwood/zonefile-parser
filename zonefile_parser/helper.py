@@ -1,5 +1,4 @@
 
-# TODO unit test
 def remove_comments(line:str):
     for index,character in enumerate(line):
         if character == ";" and not is_in_quote(line,index):
@@ -7,14 +6,14 @@ def remove_comments(line:str):
             break
     return line
 
-# TODO unit test
 def is_in_quote(text:str,index:int):
     return text[:index].count("\"") % 2 == 1
 
-# TODO unit test
+# TODO remove
 def remove_trailing_spaces(line:str):
     return line
 
+# TODO remove
 def collapse_brackets(text:str):
     return text
 
@@ -27,13 +26,21 @@ def parse_bind(bind:str):
         "w": 604800
     }
 
-    period = bind[-1]
+    seconds = 0
 
-    amount = int(bind.replace(period,""))
+    while len(bind) > 0:
+        period = bind[-1]
 
-    ttl_seconds = amount * periods[period.lower()]
+        amount = int(bind.replace(period, ""))
 
-    return ttl_seconds
+        seconds += amount * periods[period.lower()]
+
+        
+
+
+
+
+    return seconds
 
 # TODO unit test
 def default_ttl(text:str):
