@@ -20,6 +20,9 @@ class RecordEnum(IntEnum):
     SRV_WEIGHT= 5
     SRV_PORT = 6
     SRV_HOST = 7
+    CAA_FLAG = 4
+    CAA_TAG = 5
+    CAA_VALUE = 6
 # TODO unit test
 def parse_record(parts:list) -> Record:
     record = Record()
@@ -29,13 +32,13 @@ def parse_record(parts:list) -> Record:
     record.set_rclass(parts[RecordEnum.RCLASS].upper())
     record.set_rtype(parts[RecordEnum.RTYPE].upper())
 
-    # rdata is unique for MX, OA and SRV, everything else is the same.
-    if record.rtype not in ["MX","SOA","SRV"]:
+    # rdata is unique for MX, OA, SRV and CAA, everything else is the same.
+    if record.rtype not in ["MX","SOA","SRV","CAA"]:
         record.set_rdata({
             "value":parts[RecordEnum.RDATA]
         })
     elif record.rtype == "MX":
-        # the record is a SOA, MX or SRV
+        # the record is a SOA, MX, SRV or CAA
         record.set_rdata({
             "priority": parts[RecordEnum.MX_PRIORITY],
             "host":parts[RecordEnum.MX_HOST]
@@ -57,6 +60,14 @@ def parse_record(parts:list) -> Record:
             "port": parts[RecordEnum.SRV_PORT],
             "host": parts[RecordEnum.SRV_HOST]
         })
+    elif record.rtype == "CAA":
+        record.set_rdata({
+            "flag": parts[RecordEnum.CAA_FLAG],
+            "tag": parts[RecordEnum.CAA_TAG],
+            "value": parts[RecordEnum.CAA_VALUE],
+        })
+
+
 
     return record
 
