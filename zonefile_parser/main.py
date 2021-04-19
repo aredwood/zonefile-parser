@@ -91,19 +91,15 @@ def parse(text:str):
 
     # add a TTL to records where one doesn't exist
     def add_ttl(record:list):
-        if record[1] == "IN":
+        if not record[1].isdigit():
             record.insert(1,ttl)
 
         return record
 
     # add an rclass (defaults to IN) when one isn't present
     def add_rclass(record:list):
-        # there are at least 5 required fields for each record
-        if len(record) < 5 and record[1].isdigit():
+        if not (record[2] in ('IN','CS','CH','HS')):
             record.insert(2,default_rclass)
-
-        if len(record) < 5 and record[2].isdigit():
-            record.insert(1,default_rclass)
 
         return record
 
