@@ -7,6 +7,10 @@ from zonefile_parser.helper import default_ttl
 
 from zonefile_parser.helper import parse_bind
 
+import zonefile_parser
+
+from zonefile_parser.record import Record
+
 class Util(unittest.TestCase):
     def test_remove_comments(self):
         test_string = "test; comment"
@@ -39,5 +43,49 @@ $ORIGIN example.site.
         result = default_ttl(text)
         self.assertEqual(result,864000)
 
+    def test_correctly_parses_srv(self):
+        text = """
+$TTL 10d
+$ORIGIN example.com.
+_sip._tcp.example.com. 86400 IN SRV 0 5 5060 sipserver.example.com.
+"""
+
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        self.assertEqual(record.name,"_sip._tcp.example.com.")
+        self.assertEqual(record.ttl,"86400")
+        self.assertEqual(record.rclass,"IN")
+        self.assertEqual(record.rtype,"SRV")
+        self.assertEqual(record.rdata,{
+            "priority":"0",
+            "weight":"5",
+            "port":"5060",
+            "host":"sipserver.example.com."
+        })
+
+    def test_correctly_parses_caa(self):
+        text = """
+$TTL 10d
+$ORIGIN example.com.
+@ 86400 IN CAA 0 issue "ca.example.com"
+"""
+
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        self.assertEqual(record.name,"@")
+        self.assertEqual(record.ttl,"86400")
+        self.assertEqual(record.rclass,"IN")
+        self.assertEqual(record.rtype,"CAA")
+        self.assertEqual(record.rdata,{
+            "flag":"0",
+            "tag":"issue",
+            "value":"ca.example.com",
+        })
+ 
+        
 if __name__ == '__main__':
     unittest.main()
