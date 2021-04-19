@@ -23,6 +23,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: pip install
+      run: |
+        pip install
     - name: Test with pytest
       run: |
         pytest --cov=zonefile_parser zonefile_parser
