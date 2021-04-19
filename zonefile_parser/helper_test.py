@@ -30,6 +30,11 @@ class TestIsInQuote:
 
 class TestParseBind:
     def test_parses_two_digit_period(self):
-        input = "15M"
-        result = helper.parse_bind(input)
+        bind_string = "15M"
+        result = helper.parse_bind(bind_string)
         assert result == (15*60)
+
+    def test_parses_multiple_periods(self):
+        bind_string = "1D15M"
+        result = helper.parse_bind(bind_string)
+        assert result == (60 * 60 * 24) + (60 * 15)

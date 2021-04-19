@@ -17,6 +17,13 @@ def remove_trailing_spaces(line:str):
 def collapse_brackets(text:str):
     return text
 
+def is_integer(n):
+    try:
+        int(n)
+        return True
+    except ValueError:
+        return False
+
 def parse_bind(bind:str):
     periods = {
         "s": 1,
@@ -28,17 +35,22 @@ def parse_bind(bind:str):
 
     seconds = 0
 
-    while len(bind) > 0:
-        period = bind[-1]
+    parts = []
+    buffer = ""
 
-        amount = int(bind.replace(period, ""))
+    for char in bind:
+        if is_integer(char):
+            buffer += char
+        else:
+            parts.append(f"{buffer}{char}")
+            buffer = ""
+
+    for part in parts:
+        period = part[-1]
+
+        amount = int(part.replace(period,""))
 
         seconds += amount * periods[period.lower()]
-
-        
-
-
-
 
     return seconds
 
