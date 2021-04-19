@@ -42,7 +42,7 @@ def parse_bind(bind:str):
         if is_integer(char):
             buffer += char
         else:
-            parts.append(f"{buffer}{char}")
+            parts.append(buffer + char)
             buffer = ""
 
     for part in parts:
