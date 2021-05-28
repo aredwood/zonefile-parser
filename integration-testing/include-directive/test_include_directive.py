@@ -12,5 +12,5 @@ import zonefile_parser
 class TestIncludeDirective:
     def test_correctly_includes(self):
         this_folder = pathlib.Path(__file__).parent
-        zonefile_parser.parseFile(f"{this_folder}/main.zone")
+        zonefile_parser.parseFile(this_folder + "/main.zone")
         assert 2==2
