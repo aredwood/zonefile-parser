@@ -70,7 +70,7 @@ def parse(text:str,**kwargs):
         if "$INCLUDE" in line:
             if kwargs['parent_folder'] is None:
                 raise Exception("$INCLUDE found, use parseFile")
-            included_file_location = line.split(" ")[1]
+            included_file_location = str(line.split(" ")[1])
             included_file = os.path.join(kwargs['parent_folder'],included_file_location)
             included_file_contents = open(included_file).read().splitlines()
             lines.pop(idx)
