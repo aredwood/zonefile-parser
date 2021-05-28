@@ -29,3 +29,5 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=zonefile_parser zonefile_parser
+        pytest ./integration-testing/*
+
