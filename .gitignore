@@ -4,3 +4,4 @@ __pycache__
 zone_file_parser.egg-info
 dist
 zonefile_parser.egg-info
+**/__pycache__

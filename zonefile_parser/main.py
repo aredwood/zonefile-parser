@@ -7,6 +7,7 @@ from zonefile_parser.helper import find_soa_lines
 from zonefile_parser.helper import parted_soa
 from zonefile_parser.parser import parse_record
 
+from pathlib import Path
 import shlex
 
 
@@ -27,7 +28,21 @@ def clean(text:str):
 # TODO unit test
 # TODO break apart
 # TODO error handling
-def parse(text:str):
+def parseFile(filename:str):
+    parsed_path = Path(filename).absolute()
+
+    parent_folder = parsed_path.parent
+
+    with open(filename,"r") as stream:
+        content = stream.read()
+
+        records = parse(content, parent_folder=parent_folder)
+
+        return records
+
+
+
+def parse(text:str,**kwargs):
 
     text = clean(text)
     lines = text.splitlines()
@@ -49,6 +64,19 @@ def parse(text:str):
         lines.pop(index)
 
     lines.insert(soa_lines[0]," ".join(soa_parts))
+
+    # handle the include directive
+    for idx,line in reversed(list(enumerate(lines))):
+        if "$INCLUDE" in line:
+            if kwargs['parent_folder'] is None:
+                raise Exception("$INCLUDE found, use parseFile")
+            included_file_location = line.split(" ")[1]
+            included_file = os.path.join(kwargs['parent_folder'],included_file_location)
+            included_file_contents = open(included_file).read().splitlines()
+            lines.pop(idx)
+            # lines.insert(idx,included_file_contents)
+
+            lines = lines[:idx] + included_file_contents + lines[idx:]
 
     # remove all the $TTL & $ORIGIN lines, we have the values,
     # they are no longer needed.
