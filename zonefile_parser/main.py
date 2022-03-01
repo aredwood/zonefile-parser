@@ -98,7 +98,7 @@ def parse(text:str):
 
     # add an rclass (defaults to IN) when one isn't present
     def add_rclass(record:list):
-        if not (record[2] in ('IN','CS','CH','HS')):
+        if not (str(record[2]).upper() in ('IN','CS','CH','HS')):
             record.insert(2,default_rclass)
 
         return record
