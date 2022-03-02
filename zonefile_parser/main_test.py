@@ -24,6 +24,29 @@ _sip._tcp.example.com. 86400 IN SRV 0 5 5060 sipserver.example.com.
             "host":"sipserver.example.com."
         })
 
+    def test_handles_lowercase_rclass(self):
+        text = """
+$TTL 10d
+$ORIGIN example.com.
+@ 86400 IN CAA 0 issue "ca.example.com"
+""" 
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.rclass == "IN"
+    def test_handles_mixedcase_rclass(self):
+        text = """
+$TTL 10d
+$ORIGIN example.com.
+@ 86400 iN CAA 0 issue "ca.example.com"
+""" 
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.rclass == "IN"
+
     def test_correctly_parses_caa(self):
         text = """
 $TTL 10d
