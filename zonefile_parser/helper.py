@@ -80,6 +80,29 @@ def default_origin(text:str):
             return origin
     return None
 
+
+def collapse_lines(lines:list[str]):
+    buffer = ""
+    collapsed_lines = []
+    
+
+    for line in lines:
+        if "(" in line:
+            buffer += line
+
+        elif ")" in line:
+            buffer += line
+            collapsed_lines.append(buffer)
+            buffer = ""
+
+        elif len(buffer) > 0:
+            buffer += line
+        
+        else:
+            collapsed_lines.append(line)
+    return collapsed_lines
+    
+
 # TODO unit test
 # TODO refactor
 def find_soa_lines(text:str):
@@ -92,9 +115,11 @@ def find_soa_lines(text:str):
 
     find_bracket = False
 
+    soa_found = False
     for line_number in range(0,len(lines)-1):
         line = lines[line_number]
         if "SOA" in line.upper():
+            soa_found = True
             soa_start_line = line_number
             if "(" in line:
                 find_bracket = True
@@ -107,8 +132,10 @@ def find_soa_lines(text:str):
             soa_end_line = line_number
             break
 
-
-    return range(soa_start_line,soa_end_line + 1)
+    if not soa_found:
+        return None
+    else:
+        return range(soa_start_line,soa_end_line + 1)
 
 # TODO unit test
 def parted_soa(text:str):

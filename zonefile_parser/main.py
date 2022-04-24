@@ -6,6 +6,7 @@ from zonefile_parser.helper import default_origin
 from zonefile_parser.helper import find_soa_lines
 from zonefile_parser.helper import parted_soa
 from zonefile_parser.parser import parse_record
+from zonefile_parser.helper import collapse_lines
 
 import shlex
 
@@ -30,25 +31,33 @@ def clean(text:str):
 def parse(text:str):
 
     text = clean(text)
-    lines = text.splitlines()
+
+    raw_lines = text.splitlines()
+
+    # function to collapse records that are spread with brackets
+
+    lines = collapse_lines(raw_lines)
+    
 
     ttl = default_ttl(text)
 
     origin = default_origin(text)
 
+    
+    default_rclass = "IN"
+
     # find the SOA, process it, and add it back as a single line
     soa_lines = find_soa_lines(text)
 
-    raw_soa = "\n".join([lines[index] for index in soa_lines])
+    if soa_lines is not None:
+        raw_soa = "\n".join([lines[index] for index in soa_lines])
 
-    soa_parts = parted_soa(raw_soa)
+        soa_parts = parted_soa(raw_soa)
 
-    default_rclass = "IN"
+        for index in reversed(soa_lines):
+            lines.pop(index)
 
-    for index in reversed(soa_lines):
-        lines.pop(index)
-
-    lines.insert(soa_lines[0]," ".join(soa_parts))
+        lines.insert(soa_lines[0]," ".join(soa_parts))
 
     # remove all the $TTL & $ORIGIN lines, we have the values,
     # they are no longer needed.
