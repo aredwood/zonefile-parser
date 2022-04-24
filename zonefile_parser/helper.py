@@ -1,4 +1,4 @@
-
+import re
 def remove_comments(line:str):
     for index,character in enumerate(line):
         if character == ";" and not is_in_quote(line,index):
@@ -81,23 +81,67 @@ def default_origin(text:str):
     return None
 
 
+
+# ensure that the string:
+# 1. ends and starts with round brackets
+# 2. there is no whitespace between the brackets and the content
+# e.g. " ( 'test string') " should be "('test string')"
+def trim_brackets(input_string:str):
+    # regex that matches either round bracket, 
+    # preceded or followed by whitespace
+
+    # pattern = re.compile(r"(\(\s)|(\s\()|(\)\s)|(\s\))")
+    pattern = re.compile(r"(\(\s)|(\)\s)|(\s\))")
+
+    # print(re.match(pattern,input_string).groups())
+
+    # while re.search(pattern, input_string) is not None:
+    while re.search(pattern, input_string) is not None:
+        
+        matched_groups = (g for g in re.search(pattern, input_string).groups() if g is not None)
+
+        for group in matched_groups:
+
+            input_string = input_string.replace(
+                group,
+                group.strip()
+            )
+
+    return input_string
+
+
+
+
 def collapse_lines(lines:list[str]):
     buffer = ""
     collapsed_lines = []
     
 
     for line in lines:
-        if "(" in line:
+        # if the single line has both a closing and 
+        # opening bracket, then it can be added straight away
+        # because it cannot be further collapsed
+        if "(" in line and ")" in line:
+
+            collapsed_lines.append(trim_brackets(line))
+
+        # start of a multi-line record, store in buffer
+        elif "(" in line:
             buffer += line
 
+        # add the line to the buffer, the buffer forms a single record
+        # close the buffer
         elif ")" in line:
             buffer += line
-            collapsed_lines.append(buffer)
+
+            collapsed_lines.append(trim_brackets(buffer))
             buffer = ""
 
+        # if the buffer has content in it, add current line
         elif len(buffer) > 0:
             buffer += line
-        
+
+        # record is not part of a multiline record, no alteration needed.
         else:
             collapsed_lines.append(line)
     return collapsed_lines

@@ -1,6 +1,6 @@
 from zonefile_parser.record import Record
 from enum import IntEnum
-
+import re
 class RecordEnum(IntEnum):
     NAME = 0
     TTL = 1
@@ -31,11 +31,26 @@ def parse_record(parts:list) -> Record:
     record.set_ttl(parts[RecordEnum.TTL])
     record.set_rclass(parts[RecordEnum.RCLASS].upper())
     record.set_rtype(parts[RecordEnum.RTYPE].upper())
+    
+
+
+
 
     # rdata is unique for MX, OA, SRV and CAA, everything else is the same.
     if record.rtype not in ["MX","SOA","SRV","CAA"]:
+
+        # if the rdata is surrounded by round brackets they can be removed
+        # as they are just containers for the data within, see RFC1035 5.1
+        rdata = re.sub(
+            # a round bracket at the end or start
+            re.compile(r"(^\()|(\)$)"),
+            "",
+            parts[RecordEnum.RDATA]
+        )
+
+
         record.set_rdata({
-            "value":parts[RecordEnum.RDATA]
+            "value":rdata
         })
     elif record.rtype == "MX":
         # the record is a SOA, MX, SRV or CAA
