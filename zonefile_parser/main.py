@@ -7,7 +7,8 @@ from zonefile_parser.helper import find_soa_lines
 from zonefile_parser.helper import parted_soa
 from zonefile_parser.parser import parse_record
 from zonefile_parser.helper import collapse_lines
-
+from zonefile_parser.helper import trim_brackets
+from zonefile_parser.helper import remove_whitespace_between_quotes_between_brackets
 import shlex
 
 
@@ -35,7 +36,6 @@ def parse(text:str):
     raw_lines = text.splitlines()
 
     # function to collapse records that are spread with brackets
-
     lines = collapse_lines(raw_lines)
     
 
@@ -89,6 +89,10 @@ def parse(text:str):
             name = record_line[:record_line.index(" ")]
             last_name = name
 
+        # clean up any records that have brackets
+        record_line = remove_whitespace_between_quotes_between_brackets(record_line)
+        record_line = trim_brackets(record_line)
+
         normalized_records.append(record_line)
 
     normalized_records = list(
@@ -97,6 +101,12 @@ def parse(text:str):
             normalized_records
         )
     )
+
+    # collapse lines again due to shlex handling
+    normalized_records = list(map(
+        lambda  x : collapse_lines(x," "),
+        normalized_records
+    ))
 
     # add a TTL to records where one doesn't exist
     def add_ttl(record:list):

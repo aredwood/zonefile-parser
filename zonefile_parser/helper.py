@@ -109,11 +109,38 @@ def trim_brackets(input_string:str):
 
     return input_string
 
+# worth renaming tbh
+def remove_whitespace_between_quotes_between_brackets(input_string:str):
+    whitespace_pattern = re.compile(r'"(.*?)"')
+
+    bracket_pattern = re.compile(r"\((.*?)\)")
+
+    # get bracket portion of record
+    bracket_match = re.search(bracket_pattern,input_string)
+
+    if bracket_match is None:
+        return input_string
+    
+    bracket_contents = bracket_match.group(0)
+
+    bracket_contents_cleaned = "(" + "".join(
+        re.findall(whitespace_pattern, bracket_contents)
+    ) + ")"
+
+    result = re.sub(
+        bracket_pattern,
+        bracket_contents_cleaned,
+        input_string
+    )
+
+    print(result)
+
+    return result
 
 
 
-def collapse_lines(lines:list[str]):
-    buffer = ""
+def collapse_lines(lines:list[str],delimiter:str = ""):
+    buffer = []
     collapsed_lines = []
     
 
@@ -127,19 +154,21 @@ def collapse_lines(lines:list[str]):
 
         # start of a multi-line record, store in buffer
         elif "(" in line:
-            buffer += line
+            buffer.append(line)
 
         # add the line to the buffer, the buffer forms a single record
         # close the buffer
         elif ")" in line:
-            buffer += line
+            buffer.append(line)
 
-            collapsed_lines.append(trim_brackets(buffer))
+            # remove whitespace between quotes, between brackets
+            collapsed_lines.append(delimiter.join(buffer))
             buffer = ""
+
 
         # if the buffer has content in it, add current line
         elif len(buffer) > 0:
-            buffer += line
+            buffer.append(line)
 
         # record is not part of a multiline record, no alteration needed.
         else:

@@ -74,3 +74,18 @@ class TestCollapseLines:
         result = helper.collapse_lines(input)
 
         assert result == ["(1)"]
+
+class TestRemoveWhitespace():
+    def test_removes_whitespace_between_quote_strings(self):
+        input_string = '("1" "2")'
+
+        result = helper.remove_whitespace_between_quotes_between_brackets(input_string)
+
+        assert result == "(12)"
+    
+    def test_whitespace_between_quotes_is_preserved(self):
+        input_string = '(" 1 " "2")'
+
+        result = helper.remove_whitespace_between_quotes_between_brackets(input_string)
+
+        assert result == "( 1 2)"
