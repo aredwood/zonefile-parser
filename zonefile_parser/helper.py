@@ -1,4 +1,5 @@
 import re
+from typing import List
 def remove_comments(line:str):
     for index,character in enumerate(line):
         if character == ";" and not is_in_quote(line,index):
@@ -139,7 +140,7 @@ def remove_whitespace_between_quotes_between_brackets(input_string:str):
 
 
 
-def collapse_lines(lines:list[str],delimiter = ""):
+def collapse_lines(lines:List[str],delimiter = ""):
     buffer = []
     collapsed_lines = []
     
