@@ -139,7 +139,7 @@ def remove_whitespace_between_quotes_between_brackets(input_string:str):
 
 
 
-def collapse_lines(lines:list[str],delimiter:str = ""):
+def collapse_lines(lines:list[str],delimiter = ""):
     buffer = []
     collapsed_lines = []
     
