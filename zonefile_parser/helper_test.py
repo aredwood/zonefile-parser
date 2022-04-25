@@ -38,3 +38,54 @@ class TestParseBind:
         bind_string = "1D15M"
         result = helper.parse_bind(bind_string)
         assert result == (60 * 60 * 24) + (60 * 15)
+
+
+class TestCollapseLines:
+    def test_doesnt_collapse_normal_lines(self):
+        input = [
+            "1",
+            "2",
+            "3"
+        ]
+
+        result = helper.collapse_lines(input)
+
+        assert result == [
+            "1",
+            "2",
+            "3"
+        ]
+    
+    def test_collapse_brackets_into_line(self):
+        input = [
+            "1",
+            "(2",
+            "3",
+            "4)"
+        ]
+
+        result = helper.collapse_lines(input)
+
+        assert result == ["1","(234)"];
+
+    def test_handles_single_line(self):
+        input = ["(1)"]
+
+        result = helper.collapse_lines(input)
+
+        assert result == ["(1)"]
+
+class TestRemoveWhitespace():
+    def test_removes_whitespace_between_quote_strings(self):
+        input_string = '("1" "2")'
+
+        result = helper.remove_whitespace_between_quotes_between_brackets(input_string)
+
+        assert result == "(12)"
+    
+    def test_whitespace_between_quotes_is_preserved(self):
+        input_string = '(" 1 " "2")'
+
+        result = helper.remove_whitespace_between_quotes_between_brackets(input_string)
+
+        assert result == "( 1 2)"
