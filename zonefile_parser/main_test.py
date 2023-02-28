@@ -98,3 +98,21 @@ $ORIGIN example.com.
             "tag":"issue",
             "value":"ca.example.com"
         })
+
+    def test_issue_24(self):
+        text = """
+$ORIGIN example.com
+@	300	IN	SOA	1 1 2 3600 600 604800 1800
+sub.sub	63	IN	CNAME	value.com
+sub     64  IN  CNAME   value.com
+@       65  IN  CNAME   value.com
+        65  IN  CNAME   value.com
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert (result[0].rtype == "SOA")
+
+        assert (result[1].name == "sub.sub.example.com")
+        assert (result[2].name == "sub.example.com")
+        assert (result[3].name == "example.com")
+        assert (result[4].name == "example.com")

@@ -79,14 +79,25 @@ def parse(text:str):
         # replace all tabs with spaces
         record_line = record_line.replace("\t"," ")
 
+        name = record_line[:record_line.index(" ")]
+
+        # if the line starts with "@", replace it with the origin
         if record_line[0] == "@" and origin is not None:
             record_line = record_line.replace("@",origin)
             last_name = origin
-
-        if record_line[0] == " ":
+        # if the line behinds with a space, 
+        # it inherits the name of the previously processed record
+        elif record_line[0] == " ":
             record_line = last_name + record_line
+        # if you specify a name, add the origin to the end of the name
+        # provided that the name doesnt already have the origin
+        # 
+        # $ORIGIN example.com
+        # test              test.example.com
+        # test.example.com  test.example.com
+        elif origin is not None and not name.endswith(origin):
+            record_line = record_line.replace(name,name + "." + origin)
         else:
-            name = record_line[:record_line.index(" ")]
             last_name = name
 
         # clean up any records that have brackets
