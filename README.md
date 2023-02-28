@@ -1,5 +1,7 @@
 # zone-file-parser
 
+[![unit-tests](https://github.com/aredwood/zonefile-parser/actions/workflows/unit-test.yml/badge.svg)](https://github.com/aredwood/zonefile-parser/actions/workflows/unit-test.yml)
+
 ! this package is not currently RFC compliant, but if you open up an issue on github - i'm more than likely to attempt to solve it.
 
 ## install
