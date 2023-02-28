@@ -5,9 +5,11 @@ name: unit-tests
 
 on:
   push:
-    branches: "*/*"
+    branches: "*"
   pull_request:
     branches: [ master ]
+  schedule:
+    - cron:  '00 0 * * *'
 
 jobs:
   build:
