@@ -98,3 +98,20 @@ $ORIGIN example.com.
             "tag":"issue",
             "value":"ca.example.com"
         })
+
+    def test_issue_26(self):
+        text = """
+$TTL 86400
+$ORIGIN XX.EXAMPLE.
+@ IN SOA NS1.XX.EXAMPLE. HOSTMATER.XX.EXAMPLE. (
+1997102000 ; serial
+1800 ; refresh (30 mins)
+900 ; retry (15 mins)
+604800 ; expire (7 days)
+1200 ) ; minimum (20 mins)
+"""
+        result = zonefile_parser.main.parse(text)
+        record = result[0]
+
+        assert (record.rtype == "SOA")
+
