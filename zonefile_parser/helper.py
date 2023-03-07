@@ -59,7 +59,7 @@ def parse_bind(bind:str):
 def default_ttl(text:str):
     lines = text.splitlines()
     for line in lines:
-        if "$TTL" in line:
+        if "$TTL".casefold() in line.casefold():
             ttl_str = line.split(" ")[1]
             try:
                 ttl = int(ttl_str)
@@ -76,7 +76,7 @@ def default_ttl(text:str):
 def default_origin(text:str):
     lines = text.splitlines()
     for line in lines:
-        if "$ORIGIN" in line:
+        if "$ORIGIN".casefold() in line.casefold():
             origin = line.split(" ")[1]
             return origin
     return None

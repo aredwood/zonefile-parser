@@ -101,7 +101,7 @@ $ORIGIN example.com.
 
     def test_issue_24(self):
         text = """
-$ORIGIN example.com
+$origin example.com
 @	300	IN	SOA	1 1 2 3600 600 604800 1800
 sub.sub	63	IN	CNAME	value.com
 sub     64  IN  CNAME   value.com

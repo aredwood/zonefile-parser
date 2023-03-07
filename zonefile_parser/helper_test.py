@@ -89,3 +89,55 @@ class TestRemoveWhitespace():
         result = helper.remove_whitespace_between_quotes_between_brackets(input_string)
 
         assert result == "( 1 2)"
+
+class TestDefaultTTL():
+    def test_parses_uppercase_ttl(self):
+        input_string = """
+$TTL 1D
+"""
+
+        ttl = helper.default_ttl(input_string)
+
+        assert ttl == (60*60*24)
+    def test_parses_lowercase_ttl(self):
+        input_string = """
+$ttl 1D
+"""
+
+        ttl = helper.default_ttl(input_string)
+
+        assert ttl == (60*60*24)
+
+    def test_parses_mixedcase_ttl(self):
+        input_string = """
+$TtL 1D
+"""
+
+        ttl = helper.default_ttl(input_string)
+
+        assert ttl == (60*60*24)
+
+class TestDefaultOrigin():
+    def test_parses_uppercase_origin(self):
+        input_string = """
+$ORIGIN example.com
+"""
+        origin = helper.default_origin(input_string)
+
+        assert origin == "example.com"
+
+    def test_parses_lowercase_origin(self):
+        input_string = """
+$origin example.com
+"""
+        origin = helper.default_origin(input_string)
+
+        assert origin == "example.com"
+
+    def test_parses_mixedcase_origin(self):
+        input_string = """
+$OrIgIn example.com
+"""
+        origin = helper.default_origin(input_string)
+
+        assert origin == "example.com"

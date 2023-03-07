@@ -63,7 +63,7 @@ def parse(text:str):
     # they are no longer needed.
     record_lines = list(
         filter(
-            lambda x : "$TTL" not in x and "$ORIGIN" not in x,
+            lambda x : "$TTL".casefold() not in x.casefold() and "$ORIGIN".casefold() not in x.casefold(),
             lines
         )
     )
