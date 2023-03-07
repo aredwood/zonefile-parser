@@ -1,4 +1,3 @@
-import os
 from zonefile_parser.helper import remove_comments
 from zonefile_parser.helper import remove_trailing_spaces
 from zonefile_parser.helper import default_ttl
@@ -108,7 +107,7 @@ def parse(text:str):
 
     normalized_records = list(
         map(
-            lambda x : shlex.split(x),
+            shlex.split,
             normalized_records
         )
     )
@@ -136,21 +135,21 @@ def parse(text:str):
 
     normalized_records = list(
         map(
-            lambda x : add_ttl(x),
+            add_ttl,
             normalized_records
         )
     )
 
     normalized_records = list(
         map(
-            lambda x : add_rclass(x),
+            add_rclass,
             normalized_records
         )
     )
 
     normalized_records = list(
         map(
-            lambda x : parse_record(x),
+            parse_record,
             normalized_records
         )
     )

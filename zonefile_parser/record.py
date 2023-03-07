@@ -4,7 +4,6 @@
 class Record:
 
     def __init__(self):
-        valid_types = ["mx","cname","a","soa"]
         self.rtype = None
         self.name = None
         self.rclass = None
