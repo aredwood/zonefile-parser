@@ -1,4 +1,3 @@
-import pytest
 import zonefile_parser.helper as helper
 
 class TestRemoveComments:
