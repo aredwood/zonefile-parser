@@ -59,8 +59,13 @@ def parse_bind(bind:str):
 def default_ttl(text:str):
     lines = text.splitlines()
     for line in lines:
-        if "$TTL".casefold() in line.casefold():
-            ttl_str = line.split(" ")[1]
+        if line.casefold().startswith("$TTL".casefold()):
+
+            # attempt to find the delimiter by
+            # looking at the character just after the $TTL
+            delimiter = line.casefold()[4]
+
+            ttl_str = line.split(delimiter)[1]
             try:
                 ttl = int(ttl_str)
                 return int(ttl)
