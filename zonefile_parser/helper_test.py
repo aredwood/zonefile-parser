@@ -112,7 +112,7 @@ $ttl 1D
         # because linters / IDEs might turn it into
         # multiple spaces
 
-        input_string = "".join(["$ttl",u'\x09','1D'])
+        input_string = "".join(["$ttl", u'\x09', '1D'])
 
         ttl = helper.default_ttl(input_string)
 
