@@ -107,6 +107,17 @@ $ttl 1D
 
         assert ttl == (60*60*24)
 
+    def test_parses_tab_delimiter_ttl(self):
+        # we have to construct the string line this
+        # because linters / IDEs might turn it into
+        # multiple spaces
+
+        input_string = "".join(["$ttl", u'\x09', '1D'])
+
+        ttl = helper.default_ttl(input_string)
+
+        assert ttl == (60*60*24)
+
     def test_parses_mixedcase_ttl(self):
         input_string = """
 $TtL 1D
