@@ -36,17 +36,15 @@ def parse(text:str):
 
     # function to collapse records that are spread with brackets
     lines = collapse_lines(raw_lines)
-    
 
     ttl = default_ttl(text)
 
     origin = default_origin(text)
 
-    
     default_rclass = "IN"
 
     # find the SOA, process it, and add it back as a single line
-    soa_lines = find_soa_lines(text)
+    soa_lines = find_soa_lines(lines)
 
     if soa_lines is not None:
         raw_soa = "\n".join([lines[index] for index in soa_lines])
@@ -84,13 +82,13 @@ def parse(text:str):
         if record_line[0] == "@" and origin is not None:
             record_line = record_line.replace("@",origin)
             last_name = origin
-        # if the line behinds with a space, 
+        # if the line behinds with a space,
         # it inherits the name of the previously processed record
         elif record_line[0] == " ":
             record_line = last_name + record_line
         # if you specify a name, add the origin to the end of the name
         # provided that the name doesnt already have the origin
-        # 
+        #
         # $ORIGIN example.com
         # test              test.example.com
         # test.example.com  test.example.com
@@ -104,7 +102,6 @@ def parse(text:str):
         record_line = trim_brackets(record_line)
 
         normalized_records.append(record_line)
-
     normalized_records = list(
         map(
             shlex.split,
@@ -131,7 +128,6 @@ def parse(text:str):
             record.insert(2,default_rclass)
 
         return record
-
 
     normalized_records = list(
         map(
