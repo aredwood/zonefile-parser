@@ -87,13 +87,12 @@ def default_origin(text:str):
     return None
 
 
-
 # ensure that the string:
 # 1. ends and starts with round brackets
 # 2. there is no whitespace between the brackets and the content
 # e.g. " ( 'test string') " should be "('test string')"
 def trim_brackets(input_string:str):
-    # regex that matches either round bracket, 
+    # regex that matches either round bracket,
     # preceded or followed by whitespace
 
     # pattern = re.compile(r"(\(\s)|(\s\()|(\)\s)|(\s\))")
@@ -103,7 +102,7 @@ def trim_brackets(input_string:str):
 
     # while re.search(pattern, input_string) is not None:
     while re.search(pattern, input_string) is not None:
-        
+
         matched_groups = (g for g in re.search(pattern, input_string).groups() if g is not None)
 
         for group in matched_groups:
@@ -126,7 +125,7 @@ def remove_whitespace_between_quotes_between_brackets(input_string:str):
 
     if bracket_match is None:
         return input_string
-    
+
     bracket_contents = bracket_match.group(0)
 
     bracket_contents_cleaned = "(" + "".join(
@@ -144,14 +143,12 @@ def remove_whitespace_between_quotes_between_brackets(input_string:str):
     return result
 
 
-
 def collapse_lines(lines:List[str],delimiter = ""):
     buffer = []
     collapsed_lines = []
-    
 
     for line in lines:
-        # if the single line has both a closing and 
+        # if the single line has both a closing and
         # opening bracket, then it can be added straight away
         # because it cannot be further collapsed
         if "(" in line and ")" in line:
@@ -169,8 +166,7 @@ def collapse_lines(lines:List[str],delimiter = ""):
 
             # remove whitespace between quotes, between brackets
             collapsed_lines.append(delimiter.join(buffer))
-            buffer = ""
-
+            buffer = []
 
         # if the buffer has content in it, add current line
         elif len(buffer) > 0:
@@ -180,13 +176,11 @@ def collapse_lines(lines:List[str],delimiter = ""):
         else:
             collapsed_lines.append(line)
     return collapsed_lines
-    
+
 
 # TODO unit test
 # TODO refactor
-def find_soa_lines(text:str):
-
-    lines = text.splitlines()
+def find_soa_lines(lines):
 
     soa_start_line = 0
 
@@ -206,7 +200,6 @@ def find_soa_lines(text:str):
                 soa_end_line = soa_start_line
                 break
 
-
         if ")" in line and find_bracket is True:
             soa_end_line = line_number
             break
@@ -215,6 +208,7 @@ def find_soa_lines(text:str):
         return None
     else:
         return range(soa_start_line,soa_end_line + 1)
+
 
 # TODO unit test
 def parted_soa(text:str):
