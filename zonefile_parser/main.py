@@ -9,6 +9,7 @@ from zonefile_parser.helper import collapse_lines
 from zonefile_parser.helper import trim_brackets
 from zonefile_parser.helper import remove_whitespace_between_quotes_between_brackets
 import shlex
+import os
 
 
 def clean(text:str):
@@ -28,6 +29,78 @@ def clean(text:str):
 # TODO unit test
 # TODO break apart
 # TODO error handling
+
+# TODO this whole thing needs to be refactored at some point
+# handling of spaces / tabs is inconsistent
+# doing this while watching Shameless US S07E10 is affecting code quality
+def parse_file(file_path:str):
+    """this effectively passes the result to
+    the below 'parse' function, but it
+    also pre-populates all $INCLUDES
+    """
+
+    lines = [];
+
+    with open(file_path,"r") as stream:
+        content = stream.readlines()
+
+        for line in content:
+            is_include = line.casefold().startswith("$INCLUDE".casefold())
+
+            # this line represents an include,
+            # read the file
+            if is_include:
+                # $INCLUDE <file-name> [<domain-name>] [<comment>]
+                line = line.replace("\t", " ")
+
+                line = remove_comments(line)
+                line = remove_trailing_spaces(line)
+
+                parts = shlex.split(line)
+
+                include_file = parts[1]
+                include_origin = parts[2]
+
+                resolved_path = os.path.join(
+                    os.path.dirname(file_path)
+                ,include_file)
+
+                # read the include file
+                with open(resolved_path,'r') as include_stream:
+                    for include_line in include_stream.readlines():
+                        include_line = include_line.replace("\t", " ")
+
+                        include_line = remove_comments(include_line)
+                        include_line = remove_trailing_spaces(include_line)
+
+                        include_line_parts = shlex.split(include_line)
+
+                        # as per RFC1035, if the domain in the zone is relative
+                        # (does NOT end in .)
+                        # we add the domain name if provided in the $INCLUDE directive
+                        # if it exists
+
+                        if not include_line_parts[0].endswith("."):
+                            include_line_parts[0] = include_origin + include_line_parts[0] + "."
+                        lines.append(" ".join(include_line_parts))
+
+                pass;
+
+            # this line isn't an include,
+            # just push it back into the line
+            else:
+                lines.append(line)
+
+        # all the lines have been expanded,
+        # push them back together
+        # and return the result of parse
+        return parse(
+            "\n".join(lines)
+        )
+
+
+
+
 def parse(text:str):
 
     text = clean(text)

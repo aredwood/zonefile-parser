@@ -60,7 +60,7 @@ def default_ttl(text:str):
     lines = text.splitlines()
     for line in lines:
         if line.casefold().startswith("$TTL".casefold()):
-
+            # TODO make delimiter discovery reusable
             # attempt to find the delimiter by
             # looking at the character just after the $TTL
             delimiter = line.casefold()[4]

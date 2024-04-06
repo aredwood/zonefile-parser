@@ -1,0 +1,11 @@
+$origin example.com
+@	300	IN	SOA	1 1 2 3600 600 604800 1800
+sub.sub	63	IN	CNAME	value.com
+sub     64  IN  CNAME   value.com
+@       65  IN  CNAME   value.com
+        65  IN  CNAME   value.com
+
+example.com.     IN  NS    ns1.example.com.
+example.com.     IN  NS    ns2.example.com.
+
+$INCLUDE include.zone include.example.com; Include common records
