@@ -1,0 +1,3 @@
+$TTL 10d
+$ORIGIN example.com.
+_sip._tcp.example.com. 86400 IN SRV 0 5 5060 sipserver.example.com.

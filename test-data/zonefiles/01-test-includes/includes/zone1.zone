@@ -1,0 +1,4 @@
+subdomain        IN   NS     ns1.subdomain.example.com.
+subdomain        IN   NS     ns2.subdomain.example.com.
+subdomain        IN   MX 10   mail.subdomain.example.com.
+www              IN   A     192.168.2.10 

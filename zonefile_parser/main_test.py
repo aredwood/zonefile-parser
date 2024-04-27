@@ -2,6 +2,41 @@ import zonefile_parser
 
 class TestMain:
 
+    def test_parse_file(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/00-parse-file/main.zone")
+
+        record = result[0]
+
+        assert (record.ttl == "86400")
+
+    def test_parse_file_with_include(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/01-test-includes/main.zone")
+
+        record = result[3]
+
+        assert record.rdata == {
+            "value": "value.com"
+        }
+
+    def test_parse_file_with_include_different_path(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/01-test-includes/main.zone")
+
+        record = result[13]
+
+        # include inherits the imported zone origin
+        assert record.name == "www.zone1.example.com"
+
+        assert record.rdata == {"value": "192.168.2.10"}
+
+    def test_parse_file_includes_no_origin(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/02-test-includes-noorigin/main.zone")
+
+        record = result[3]
+
+        assert record.name == "blank.example.com"
+        assert record.rdata == {"value":"192.168.1.50"}
+
+
     def test_correctly_parses_srv(self):
         text = """
 $TTL 10d
