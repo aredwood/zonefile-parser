@@ -3,7 +3,7 @@ import zonefile_parser
 class TestMain:
 
     def test_parse_file(self):
-        result = zonefile_parser.main.parse_file("../test-data/zonefiles/00-parse-file/main.zone");
+        result = zonefile_parser.main.parse_file("../test-data/zonefiles/00-parse-file/main.zone")
 
         record = result[0]
 
