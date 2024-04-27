@@ -28,6 +28,13 @@ class TestMain:
 
         assert record.rdata == {"value": "192.168.2.10"}
 
+    def test_parse_file_includes_no_origin(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/02-test-includes-noorigin/main.zone")
+
+        record = result[3]
+
+        assert record.name == "blank.example.com"
+        assert record.rdata == {"value":"192.168.1.50"}
 
 
     def test_correctly_parses_srv(self):

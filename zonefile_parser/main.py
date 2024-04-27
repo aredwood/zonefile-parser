@@ -44,6 +44,11 @@ def parse_file(file_path:str):
     with open(file_path,"r") as stream:
         content = stream.readlines()
 
+        # get the origin for the original zone file
+        # this may be used where an include is specified without an origin
+        # TODO this is bad.
+        found_origin = default_origin("\n".join(content))
+
         for line in content:
             is_include = line.casefold().startswith("$INCLUDE".casefold())
 
@@ -59,7 +64,11 @@ def parse_file(file_path:str):
                 parts = shlex.split(line)
 
                 include_file = parts[1]
-                include_origin = parts[2]
+                if len(parts) is 2:
+                    # there is no origin, use the default
+                    include_origin = found_origin
+                else:
+                    include_origin = parts[2]
 
                 resolved_path = os.path.join(
                     os.path.dirname(file_path)
