@@ -9,3 +9,4 @@ example.com.     IN  NS    ns1.example.com.
 example.com.     IN  NS    ns2.example.com.
 
 $INCLUDE include.zone include.example.com; Include common records
+$INCLUDE ./includes/zone1.zone zone1.example.com; include folder in different path

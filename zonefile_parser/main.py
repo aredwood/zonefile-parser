@@ -70,10 +70,11 @@ def parse_file(file_path:str):
                     for include_line in include_stream.readlines():
                         include_line = include_line.replace("\t", " ")
 
-                        include_line = remove_comments(include_line)
-                        include_line = remove_trailing_spaces(include_line)
+                        sanitized_include_line = remove_comments(
+                            remove_trailing_spaces(include_line)
+                        )
 
-                        include_line_parts = shlex.split(include_line)
+                        include_line_parts = shlex.split(sanitized_include_line)
 
                         # as per RFC1035, if the domain in the zone is relative
                         # (does NOT end in .)
@@ -81,7 +82,7 @@ def parse_file(file_path:str):
                         # if it exists
 
                         if not include_line_parts[0].endswith("."):
-                            include_line_parts[0] = include_origin + include_line_parts[0] + "."
+                            include_line_parts[0] = include_line_parts[0] + "." + include_origin
                         lines.append(" ".join(include_line_parts))
 
                 pass;

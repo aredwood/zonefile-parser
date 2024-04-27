@@ -18,6 +18,17 @@ class TestMain:
             "value": "value.com"
         }
 
+    def test_parse_file_with_include_different_path(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/01-test-includes/main.zone")
+
+        record = result[13]
+
+        # include inherits the imported zone origin
+        assert record.name == "www.zone1.example.com"
+
+        assert record.rdata == {"value": "192.168.2.10"}
+
+
 
     def test_correctly_parses_srv(self):
         text = """
