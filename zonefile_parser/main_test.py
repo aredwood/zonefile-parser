@@ -14,7 +14,9 @@ class TestMain:
 
         record = result[3]
 
-        assert record.rdata == "test"
+        assert record.rdata == {
+            "value": "value.com"
+        }
 
 
     def test_correctly_parses_srv(self):
