@@ -3,14 +3,14 @@ import zonefile_parser
 class TestMain:
 
     def test_parse_file(self):
-        result = zonefile_parser.main.parse_file("../test-data/zonefiles/00-parse-file/main.zone")
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/00-parse-file/main.zone")
 
         record = result[0]
 
         assert (record.ttl == "86400")
 
     def test_parse_file_with_include(self):
-        result = zonefile_parser.main.parse_file("../test-data/zonefiles/01-test-includes/main.zone")
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/01-test-includes/main.zone")
 
         record = result[3]
 
