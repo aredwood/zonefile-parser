@@ -151,3 +151,21 @@ sub     64  IN  CNAME   value.com
         assert (result[2].name == "sub.example.com")
         assert (result[3].name == "example.com")
         assert (result[4].name == "example.com")
+
+    # issue 47
+    def test_adaptive_delimiter(self):
+        text = str("""
+$TTL	10d
+$ORIGIN	example.com.
+@	86400	IN	CAA	0	issue	"ca.example.com"
+""")
+        record = zonefile_parser.main.parse(text)[0]
+        assert (record.name == "example.com.")
+        assert (record.ttl == "86400")
+        assert (record.rclass == "IN")
+        assert (record.rtype == "CAA")
+        assert (record.rdata == {
+            "flag":"0",
+            "tag":"issue",
+            "value":"ca.example.com"
+        })
