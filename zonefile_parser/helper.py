@@ -82,7 +82,9 @@ def default_origin(text:str):
     lines = text.splitlines()
     for line in lines:
         if "$ORIGIN".casefold() in line.casefold():
-            origin = line.split(" ")[1]
+            # delimiter exists ater the $ORIGIN
+            delimiter = line.casefold()[7]
+            origin = line.split(delimiter)[1]
             return origin
     return None
 
