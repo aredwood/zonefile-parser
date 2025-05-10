@@ -140,8 +140,6 @@ def remove_whitespace_between_quotes_between_brackets(input_string:str):
         input_string
     )
 
-    print(result)
-
     return result
 
 
