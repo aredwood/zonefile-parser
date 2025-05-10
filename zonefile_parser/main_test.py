@@ -18,6 +18,25 @@ class TestMain:
             "value": "value.com"
         }
 
+    def test_check_closing_space_for_soa(self):
+        result = zonefile_parser.main.parse_file("./test-data/zonefiles/03-issue-50-regression/main.zone")
+
+        record = result[0]
+
+        assert record.name == '@'
+        assert record.rclass == 'IN'
+        assert record.rdata['expire'] == '1w'
+        assert record.rdata['minimum'] == '1m'
+        assert record.rdata['mname'] == 'localhost.'
+        assert record.rdata['refresh'] == '1h'
+        assert record.rdata['retry'] == '5m'
+        assert record.rdata['rname'] == 'root.localhost.'
+        assert record.rdata['serial'] == '2025031001'
+        assert record.rtype == 'SOA'
+        assert record.ttl == 60
+
+
+
     def test_parse_file_with_include_different_path(self):
         result = zonefile_parser.main.parse_file("./test-data/zonefiles/01-test-includes/main.zone")
 

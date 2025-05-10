@@ -217,7 +217,9 @@ def parted_soa(text:str):
     text = text.replace("\n","")
 
     # part out the soa
-    parts = text.split()
+    # chain the splits together to better handle brackets
+    parts = " ".join(re.split(r'([\(\)])',text)).split()
+
 
     # remove multiple spaces, and replace them with a single space
     parts = list(
