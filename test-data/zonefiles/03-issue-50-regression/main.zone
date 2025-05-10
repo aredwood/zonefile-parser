@@ -1,0 +1,9 @@
+$TTL 60
+@            IN    SOA  localhost. root.localhost.  (
+                          2025031001   ; serial
+                          1h           ; refresh
+                          5m           ; retry
+                          1w           ; expiry
+                          1m)          ; minimum
+                   IN     NS    duke.ns.cloudflare.com.
+                   IN     NS    fiona.ns.cloudflare.com.
