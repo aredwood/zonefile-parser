@@ -78,13 +78,19 @@ def default_ttl(text:str):
     return None
 
 # TODO write test case
+def line_origin(line:str):
+    if "$ORIGIN".casefold() in line.casefold():
+        # delimiter exists ater the $ORIGIN
+        delimiter = line.casefold()[7]
+        origin = line.split(delimiter)[1]
+        return origin
+    return None
+
 def default_origin(text:str):
     lines = text.splitlines()
     for line in lines:
-        if "$ORIGIN".casefold() in line.casefold():
-            # delimiter exists ater the $ORIGIN
-            delimiter = line.casefold()[7]
-            origin = line.split(delimiter)[1]
+        origin = line_origin(line)
+        if origin:
             return origin
     return None
 
