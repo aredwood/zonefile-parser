@@ -1,7 +1,7 @@
 from zonefile_parser.helper import remove_comments
 from zonefile_parser.helper import remove_trailing_spaces
 from zonefile_parser.helper import default_ttl
-from zonefile_parser.helper import default_origin
+from zonefile_parser.helper import line_origin, default_origin
 from zonefile_parser.helper import find_soa_lines
 from zonefile_parser.helper import parted_soa
 from zonefile_parser.parser import parse_record
@@ -139,11 +139,11 @@ def parse(text:str):
 
         lines.insert(soa_lines[0]," ".join(soa_parts))
 
-    # remove all the $TTL & $ORIGIN lines, we have the values,
+    # remove all the $TTL lines, we have the values,
     # they are no longer needed.
     record_lines = list(
         filter(
-            lambda x : "$TTL".casefold() not in x.casefold() and "$ORIGIN".casefold() not in x.casefold(),
+            lambda x : "$TTL".casefold() not in x.casefold(),
             lines
         )
     )
@@ -158,6 +158,10 @@ def parse(text:str):
 
         # replace all tabs with spaces
         record_line = record_line.replace("\t"," ")
+
+        origin_of_line = line_origin(record_line)
+        if origin_of_line:
+            origin = origin_of_line
 
         name = record_line[:record_line.index(" ")]
 
@@ -176,7 +180,9 @@ def parse(text:str):
         # test              test.example.com
         # test.example.com  test.example.com
         elif origin is not None and not name.endswith(origin):
-            record_line = record_line.replace(name,name + "." + origin)
+            old_name, name = name, name + "." + origin
+            record_line = record_line.replace(old_name,name)
+            last_name = name
         else:
             last_name = name
 
