@@ -153,6 +153,30 @@ $ORIGIN example.com.
             "value":"ca.example.com"
         })
 
+    def test_multiple_origin_directives(self):
+        text = """
+$TTL 300
+$ORIGIN first.com.
+@ 300 IN A 1.2.3.4
+sub 300 IN A 1.2.3.5
+$ORIGIN second.com.
+@ 300 IN A 5.6.7.8
+host 300 IN A 5.6.7.9
+"""
+        result = zonefile_parser.main.parse(text)
+
+        # records under first.com.
+        assert result[0].name == "first.com."
+        assert result[0].rdata == {"value": "1.2.3.4"}
+        assert result[1].name == "sub.first.com."
+        assert result[1].rdata == {"value": "1.2.3.5"}
+
+        # records under second.com. (origin changed mid-file)
+        assert result[2].name == "second.com."
+        assert result[2].rdata == {"value": "5.6.7.8"}
+        assert result[3].name == "host.second.com."
+        assert result[3].rdata == {"value": "5.6.7.9"}
+
     def test_issue_24(self):
         text = """
 $origin example.com
