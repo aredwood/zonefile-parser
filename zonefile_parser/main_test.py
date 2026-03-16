@@ -283,3 +283,63 @@ $ORIGIN	example.com.
             "tag":"issue",
             "value":"ca.example.com"
         })
+
+    def test_issue_45_cname_rdata_not_corrupted(self):
+        text = """
+$TTL 3600
+$ORIGIN snorkell.live.
+xeno-rat-snorkell-ai-1 3600 IN CNAME xeno-rat-snorkell-ai-1.netlify.app.
+"""
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.name == "xeno-rat-snorkell-ai-1.snorkell.live."
+        assert record.rtype == "CNAME"
+        assert record.rdata == {"value": "xeno-rat-snorkell-ai-1.netlify.app."}
+
+    def test_cname_target_name_appears_multiple_times(self):
+        # name appears twice in the CNAME target — neither occurrence should get origin appended
+        text = """
+$TTL 3600
+$ORIGIN example.com.
+foo 3600 IN CNAME foo.foo.other.com.
+"""
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.name == "foo.example.com."
+        assert record.rtype == "CNAME"
+        assert record.rdata == {"value": "foo.foo.other.com."}
+
+    def test_origin_not_appended_to_txt_rdata_when_name_matches(self):
+        # same-name substring in TXT rdata should not get origin injected
+        text = """
+$TTL 3600
+$ORIGIN example.com.
+mail 3600 IN TXT "v=spf1 include:mail.otherdomain.com ~all"
+"""
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.name == "mail.example.com."
+        assert record.rtype == "TXT"
+        assert record.rdata == {"value": "v=spf1 include:mail.otherdomain.com ~all"}
+
+    def test_multiple_cnames_with_name_in_target(self):
+        # multiple records in the same zone, each with name appearing in their CNAME target
+        text = """
+$TTL 3600
+$ORIGIN example.com.
+api 3600 IN CNAME api.backend.net.
+www 3600 IN CNAME www.cdn.net.
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "api.example.com."
+        assert result[0].rdata == {"value": "api.backend.net."}
+
+        assert result[1].name == "www.example.com."
+        assert result[1].rdata == {"value": "www.cdn.net."}

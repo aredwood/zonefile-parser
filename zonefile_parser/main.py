@@ -182,7 +182,8 @@ def parse(text:str):
         # test              test.example.com
         # test.example.com  test.example.com
         elif origin is not None and not name.endswith(origin):
-            record_line = record_line.replace(name,name + "." + origin)
+            new_name = name + "." + origin
+            record_line = new_name + record_line[len(name):]
         else:
             last_name = name
 
