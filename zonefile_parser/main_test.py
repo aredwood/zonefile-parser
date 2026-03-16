@@ -153,6 +153,101 @@ $ORIGIN example.com.
             "value":"ca.example.com"
         })
 
+    def test_multiple_origin_directives(self):
+        text = """
+$TTL 300
+$ORIGIN first.com.
+@ 300 IN A 1.2.3.4
+sub 300 IN A 1.2.3.5
+$ORIGIN second.com.
+@ 300 IN A 5.6.7.8
+host 300 IN A 5.6.7.9
+"""
+        result = zonefile_parser.main.parse(text)
+
+        # records under first.com.
+        assert result[0].name == "first.com."
+        assert result[0].rdata == {"value": "1.2.3.4"}
+        assert result[1].name == "sub.first.com."
+        assert result[1].rdata == {"value": "1.2.3.5"}
+
+        # records under second.com. (origin changed mid-file)
+        assert result[2].name == "second.com."
+        assert result[2].rdata == {"value": "5.6.7.8"}
+        assert result[3].name == "host.second.com."
+        assert result[3].rdata == {"value": "5.6.7.9"}
+
+    def test_multiple_origins_more_than_two(self):
+        # three consecutive $ORIGIN changes — each group of records
+        # should only be affected by the origin active at that point
+        text = """
+$TTL 300
+$ORIGIN a.com.
+@ 300 IN A 1.1.1.1
+$ORIGIN b.com.
+@ 300 IN A 2.2.2.2
+$ORIGIN c.com.
+@ 300 IN A 3.3.3.3
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "a.com."
+        assert result[1].name == "b.com."
+        assert result[2].name == "c.com."
+
+    def test_multiple_origins_at_symbol_updates_with_origin(self):
+        # @ should resolve to whatever origin is active at that line,
+        # not the first origin in the file
+        text = """
+$TTL 300
+$ORIGIN first.com.
+@ 300 IN A 1.2.3.4
+$ORIGIN second.com.
+@ 300 IN A 5.6.7.8
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "first.com."
+        assert result[1].name == "second.com."
+
+    def test_multiple_origins_relative_names_use_active_origin(self):
+        # relative names should be expanded using whichever origin
+        # was most recently declared, not the first one
+        text = """
+$TTL 300
+$ORIGIN first.com.
+www 300 IN A 1.2.3.4
+$ORIGIN second.com.
+www 300 IN A 5.6.7.8
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "www.first.com."
+        assert result[1].name == "www.second.com."
+
+    def test_multiple_origins_tab_delimited(self):
+        # $ORIGIN directives using tab delimiters should be handled
+        # correctly when there are multiple of them
+        text = "$TTL 300\n$ORIGIN\tfirst.com.\n@ 300 IN A 1.2.3.4\n$ORIGIN\tsecond.com.\n@ 300 IN A 5.6.7.8\n"
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "first.com."
+        assert result[1].name == "second.com."
+
+    def test_multiple_origins_case_insensitive(self):
+        # $origin and $ORIGIN should both update the active origin
+        text = """
+$TTL 300
+$origin first.com.
+@ 300 IN A 1.2.3.4
+$ORIGIN second.com.
+@ 300 IN A 5.6.7.8
+"""
+        result = zonefile_parser.main.parse(text)
+
+        assert result[0].name == "first.com."
+        assert result[1].name == "second.com."
+
     def test_issue_24(self):
         text = """
 $origin example.com

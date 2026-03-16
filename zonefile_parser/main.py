@@ -122,8 +122,6 @@ def parse(text:str):
 
     ttl = default_ttl(text)
 
-    origin = default_origin(text)
-
     default_rclass = "IN"
 
     # find the SOA, process it, and add it back as a single line
@@ -139,11 +137,11 @@ def parse(text:str):
 
         lines.insert(soa_lines[0]," ".join(soa_parts))
 
-    # remove all the $TTL & $ORIGIN lines, we have the values,
-    # they are no longer needed.
+    # remove all the $TTL lines; $ORIGIN lines are kept and processed inline
+    # so that multiple $ORIGIN directives in a single file are handled correctly.
     record_lines = list(
         filter(
-            lambda x : "$TTL".casefold() not in x.casefold() and "$ORIGIN".casefold() not in x.casefold(),
+            lambda x : "$TTL".casefold() not in x.casefold(),
             lines
         )
     )
@@ -152,12 +150,20 @@ def parse(text:str):
     # we need to fill in the name of each record
 
     # go through the zone file and add a name to every record
+    # origin starts as None and is updated whenever a $ORIGIN directive is encountered
     normalized_records = []
     last_name = None
+    origin = None
     for record_line in record_lines:
 
         # replace all tabs with spaces
         record_line = record_line.replace("\t"," ")
+
+        # if this line is a $ORIGIN directive, update the current origin and move on
+        if record_line.strip().casefold().startswith("$origin"):
+            delimiter = record_line.casefold()[7]
+            origin = record_line.split(delimiter)[1].strip()
+            continue
 
         name = record_line[:record_line.index(" ")]
 
