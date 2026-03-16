@@ -25,13 +25,13 @@ class Record:
         return str(self.__repr__())
 
     def __repr__(self):
-        return {
+        return str({
             "rtype":self.rtype,
             "name":self.name,
             "rclass":self.rclass,
             "rdata":self.rdata ,
             "ttl":self.ttl
-        }
+        })
 
     def validate(self):
         # TODO make this work
