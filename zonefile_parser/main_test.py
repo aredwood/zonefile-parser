@@ -188,3 +188,17 @@ $ORIGIN	example.com.
             "tag":"issue",
             "value":"ca.example.com"
         })
+
+    def test_issue_45_cname_rdata_not_corrupted(self):
+        text = """
+$TTL 3600
+$ORIGIN snorkell.live.
+xeno-rat-snorkell-ai-1 3600 IN CNAME xeno-rat-snorkell-ai-1.netlify.app.
+"""
+        result = zonefile_parser.main.parse(text)
+
+        record = result[0]
+
+        assert record.name == "xeno-rat-snorkell-ai-1.snorkell.live."
+        assert record.rtype == "CNAME"
+        assert record.rdata == {"value": "xeno-rat-snorkell-ai-1.netlify.app."}
