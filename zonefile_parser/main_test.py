@@ -343,3 +343,16 @@ www 3600 IN CNAME www.cdn.net.
 
         assert result[1].name == "www.example.com."
         assert result[1].rdata == {"value": "www.cdn.net."}
+
+    def test_issue_44_print_records_does_not_raise(self):
+        text = """
+$TTL 3600
+$ORIGIN example.com.
+@ 3600 IN A 192.0.2.1
+"""
+        records = zonefile_parser.main.parse(text)
+        # __repr__ must return a str; printing a list calls repr() on each element
+        assert isinstance(repr(records[0]), str)
+        # str(record) and print(records) must not raise
+        assert isinstance(str(records[0]), str)
+        _ = str(records)  # exercises list __repr__, which calls record.__repr__()
