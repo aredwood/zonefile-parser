@@ -21,7 +21,7 @@ class TestRemoveComments:
         result = helper.remove_comments(input)
         assert result == input
 
-    def test_removes_comment_after_escaped_semicolon(self):
+    def test_doesnt_treat_text_after_escaped_semicolon_as_comment(self):
         input = r"v=DMARC1\; comment"
         result = helper.remove_comments(input)
         assert result == input
