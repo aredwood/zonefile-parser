@@ -3,6 +3,8 @@ from typing import List
 def remove_comments(line:str):
     for index,character in enumerate(line):
         if character == ";" and not is_in_quote(line,index):
+            if index > 0 and line[index - 1] == '\\':
+                continue
             line = line[:index]
             break
     return line

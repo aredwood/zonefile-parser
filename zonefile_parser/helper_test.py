@@ -16,6 +16,16 @@ class TestRemoveComments:
         result = helper.remove_comments(input)
         assert result == input
 
+    def test_doesnt_remove_escaped_semicolon(self):
+        input = r"v=DMARC1\;"
+        result = helper.remove_comments(input)
+        assert result == input
+
+    def test_doesnt_treat_text_after_escaped_semicolon_as_comment(self):
+        input = r"v=DMARC1\; comment"
+        result = helper.remove_comments(input)
+        assert result == input
+
 class TestIsInQuote:
     def test_returns_whether_index_in_quote(self):
         input = '"A"'
