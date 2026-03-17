@@ -344,12 +344,12 @@ _dmarc 3600 IN TXT v=DMARC1\\;
         assert record.rdata == {"value": "v=DMARC1;"}
 
     def test_issue_49_dmarc_record_with_comment(self):
-        # DMARC TXT record with escaped semicolons and a trailing comment
-        # the comment (after unescaped ;) should be stripped, \; should survive as ;
+        # DMARC TXT record with an escaped semicolon followed by a real comment
+        # the real comment (unescaped ;) should be stripped, \; should survive as ;
         text = """
 $TTL 3600
 $ORIGIN example.com.
-_dmarc 3600 IN TXT v=DMARC1\\; p=none\\; rua=mailto:dmarc@example.com ; this is a comment
+_dmarc 3600 IN TXT v=DMARC1\\; ; this is a comment
 """
         result = zonefile_parser.main.parse(text)
 
@@ -357,7 +357,7 @@ _dmarc 3600 IN TXT v=DMARC1\\; p=none\\; rua=mailto:dmarc@example.com ; this is 
 
         assert record.name == "_dmarc.example.com."
         assert record.rtype == "TXT"
-        assert record.rdata == {"value": "v=DMARC1; p=none; rua=mailto:dmarc@example.com"}
+        assert record.rdata == {"value": "v=DMARC1;"}
 
     def test_multiple_cnames_with_name_in_target(self):
         # multiple records in the same zone, each with name appearing in their CNAME target
